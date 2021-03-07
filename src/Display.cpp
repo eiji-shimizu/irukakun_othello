@@ -9,8 +9,8 @@ namespace IrukakunOthello
     const std::string FULL_WIDTH_SPACE = "　";
     const std::string CRLF = "\r\n";
     const std::string FULL_WIDTH_DOT = "・";
-    const std::string BLACK_STONE = "●";
-    const std::string WHITE_STONE = "○";
+    const std::string BLACK_DISK = "●";
+    const std::string WHITE_DISK = "○";
     const std::string ONE = "１";
     const std::string TWO = "２";
     const std::string THREE = "３";
@@ -146,9 +146,9 @@ namespace IrukakunOthello
                     else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
                         data_[i][j].setLetter(FULL_WIDTH_DOT);
                     else if (j == 4)
-                        data_[i][j].setLetter(BLACK_STONE);
+                        data_[i][j].setLetter(BLACK_DISK);
                     else if (j == 5)
-                        data_[i][j].setLetter(WHITE_STONE);
+                        data_[i][j].setLetter(WHITE_DISK);
                 }
                 else if (i == 5)
                 {
@@ -159,9 +159,9 @@ namespace IrukakunOthello
                     else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
                         data_[i][j].setLetter(FULL_WIDTH_DOT);
                     else if (j == 4)
-                        data_[i][j].setLetter(WHITE_STONE);
+                        data_[i][j].setLetter(WHITE_DISK);
                     else if (j == 5)
-                        data_[i][j].setLetter(BLACK_STONE);
+                        data_[i][j].setLetter(BLACK_DISK);
                 }
                 else
                 {

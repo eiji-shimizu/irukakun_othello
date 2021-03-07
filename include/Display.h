@@ -10,8 +10,8 @@ namespace IrukakunOthello
     extern const std::string FULL_WIDTH_SPACE;
     extern const std::string CRLF;
     extern const std::string FULL_WIDTH_DOT;
-    extern const std::string BLACK_STONE;
-    extern const std::string WHITE_STONE;
+    extern const std::string BLACK_DISK;
+    extern const std::string WHITE_DISK;
     extern const std::string ONE;
     extern const std::string TWO;
     extern const std::string THREE;

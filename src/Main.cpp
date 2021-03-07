@@ -1,4 +1,5 @@
 #include "Display.h"
+#include "OthelloGame.h"
 
 #include <iostream>
 #include <vector>
@@ -19,28 +20,19 @@ int main()
         // display.setLetter(0, 0, "あ");
         // display.setLetter(4, 3, FULL_WIDTH_DOT);
         // display.setLetter(0, 1, "い");
-        // display.setLetter(0, 0, BLACK_STONE);
-        // display.setLetter(6, 7, WHITE_STONE);
+        // display.setLetter(0, 0, BLACK_DISK);
+        // display.setLetter(6, 7, WHITE_DISK);
         // std::cout << display.toString();
         display.initializeDisplay();
-        display.setLetter(0, 0, "あ");
-        display.setLetter(4, 3, FULL_WIDTH_DOT);
-        display.setLetter(0, 1, "い");
-        display.setLetter(0, 0, BLACK_STONE);
-        display.setLetter(6, 7, WHITE_STONE);
-        display.drawAll();
 
-        char c;
-        std::cin >> c;
+        OthelloGame game(display);
 
-        display.setLetter(0, 0, "鉄");
-        display.draw(0, 0);
-
-        // std::cin >> c;
-
-        // int k = 0;
-        // throw std::runtime_error("エラー発生");
-        // int l = 100 / k;
+        short rowNo, colNo;
+        while (std::cin >> rowNo >> colNo)
+        {
+            game.putDisk(rowNo, colNo);
+            game.reDraw(rowNo, colNo);
+        }
     }
     catch (std::exception &e)
     {
