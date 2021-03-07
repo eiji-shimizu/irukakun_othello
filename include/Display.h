@@ -85,8 +85,10 @@ namespace IrukakunOthello
             short x_, y_;
         };
 
+        static const int xUpperLimit = 10;
+        static const int yUpperLimit = 10;
         // 表示文字の2次元配列
-        std::array<std::array<Element, 10>, 10> data_;
+        std::array<std::array<Element, yUpperLimit>, xUpperLimit> data_;
     };
 
 } // namespace IrukakunOthello

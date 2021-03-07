@@ -111,12 +111,22 @@ namespace IrukakunOthello
 
     void Display::setLetter(std::size_t rowNo, std::size_t colNo, std::string letter)
     {
-        data_[rowNo][colNo].setLetter(letter);
+        if ((0 <= rowNo && rowNo < xUpperLimit) && (0 <= colNo && colNo < yUpperLimit))
+        {
+            data_[rowNo][colNo].setLetter(letter);
+            return;
+        }
+        throw std::out_of_range("out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
     }
 
     void Display::draw(std::size_t rowNo, std::size_t colNo) const
     {
-        data_[rowNo][colNo].draw();
+        if ((0 <= rowNo && rowNo < xUpperLimit) && (0 <= colNo && colNo < yUpperLimit))
+        {
+            data_[rowNo][colNo].draw();
+            return;
+        }
+        throw std::out_of_range("out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
     }
 
     void Display::drawAll() const
