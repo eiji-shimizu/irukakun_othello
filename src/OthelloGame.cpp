@@ -46,6 +46,8 @@ namespace IrukakunOthello
             return Display::BLACK_DISK;
         case WHITE:
             return Display::WHITE_DISK;
+        case NONE:
+            return Display::FULL_WIDTH_DOT;
         }
         assert(false);
         return "";

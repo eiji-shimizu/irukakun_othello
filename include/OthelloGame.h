@@ -7,6 +7,7 @@ namespace IrukakunOthello
     {
         BLACK,
         WHITE,
+        NONE,
         RED // assert確認用,後に消す
     };
 
