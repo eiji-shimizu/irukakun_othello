@@ -8,9 +8,18 @@ namespace IrukakunOthello
 {
 
     extern const std::string FULL_WIDTH_SPACE;
+    extern const std::string CRLF;
     extern const std::string FULL_WIDTH_DOT;
     extern const std::string BLACK_STONE;
     extern const std::string WHITE_STONE;
+    extern const std::string ONE;
+    extern const std::string TWO;
+    extern const std::string THREE;
+    extern const std::string FOUR;
+    extern const std::string FIVE;
+    extern const std::string SIX;
+    extern const std::string SEVEN;
+    extern const std::string EIGHT;
 
     /*
     画面クラス
@@ -30,6 +39,9 @@ namespace IrukakunOthello
         Display(Display &&) = delete;
         Display &operator=(Display &&) = delete;
 
+        // 内容を初期化した状態でコンソールに表示する
+        // このメソッド呼び出しにより各要素の画面上の表示位置が設定される
+        void initializeDisplay();
         // 指定された行列の位置に第3引数の文字を設定する
         void setLetter(std::size_t rowNo, std::size_t colNo, std::string letter);
         std::string toString() const;
@@ -39,6 +51,7 @@ namespace IrukakunOthello
         class Element
         {
         public:
+            Element(std::string letter, short x, short y);
             Element(std::string letter);
             Element();
             ~Element();
@@ -51,11 +64,15 @@ namespace IrukakunOthello
             Element &operator=(Element &&) = delete;
 
             void setLetter(std::string letter);
+            void setX(short x);
+            void setY(short y);
             std::string toString() const;
 
         private:
             // 表示文字
             std::string letter_;
+            // コンソール上の表示位置
+            short x_, y_;
         };
 
         // 表示文字の2次元配列

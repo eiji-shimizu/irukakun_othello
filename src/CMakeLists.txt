@@ -1,9 +1,22 @@
+# ConsoleMod
+add_library(ConsoleMod STATIC
+            Console.cpp)
+
+target_include_directories(ConsoleMod
+                            PRIVATE ${IRUKAKUN_OTHELLO_INCLUDE_PLATFORM_DIRS})
+
+# DisplayMod
 add_library(DisplayMod STATIC
             Display.cpp)
 
-target_include_directories(DisplayMod PRIVATE
-                            ${IRUKAKUN_OTHELLO_INCLUDE_DIRS})
+target_link_libraries(DisplayMod
+                        ConsoleMod)
 
+target_include_directories(DisplayMod
+                            PRIVATE ${IRUKAKUN_OTHELLO_INCLUDE_PLATFORM_DIRS}
+                            PUBLIC ${IRUKAKUN_OTHELLO_INCLUDE_DIRS})
+
+# IrukakunOthello
 add_executable(IrukakunOthello
                 Main.cpp)
 
