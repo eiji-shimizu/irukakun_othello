@@ -6,21 +6,6 @@
 
 namespace IrukakunOthello
 {
-
-    extern const std::string FULL_WIDTH_SPACE;
-    extern const std::string CRLF;
-    extern const std::string FULL_WIDTH_DOT;
-    extern const std::string BLACK_DISK;
-    extern const std::string WHITE_DISK;
-    extern const std::string ONE;
-    extern const std::string TWO;
-    extern const std::string THREE;
-    extern const std::string FOUR;
-    extern const std::string FIVE;
-    extern const std::string SIX;
-    extern const std::string SEVEN;
-    extern const std::string EIGHT;
-
     /*
     画面クラス
     10×10の2次元配列を持ち,その要素がコンソールに表示される.
@@ -29,6 +14,20 @@ namespace IrukakunOthello
     class Display
     {
     public:
+        static const std::string FULL_WIDTH_SPACE;
+        static const std::string CRLF;
+        static const std::string FULL_WIDTH_DOT;
+        static const std::string BLACK_DISK;
+        static const std::string WHITE_DISK;
+        static const std::string ONE;
+        static const std::string TWO;
+        static const std::string THREE;
+        static const std::string FOUR;
+        static const std::string FIVE;
+        static const std::string SIX;
+        static const std::string SEVEN;
+        static const std::string EIGHT;
+
         Display();
         ~Display();
 

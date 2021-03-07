@@ -10,21 +10,21 @@ namespace IrukakunOthello
     {
 
         if (i == 1)
-            return ONE;
+            return Display::ONE;
         else if (i == 2)
-            return TWO;
+            return Display::TWO;
         else if (i == 3)
-            return THREE;
+            return Display::THREE;
         else if (i == 4)
-            return FOUR;
+            return Display::FOUR;
         else if (i == 5)
-            return FIVE;
+            return Display::FIVE;
         else if (i == 6)
-            return SIX;
+            return Display::SIX;
         else if (i == 7)
-            return SEVEN;
+            return Display::SEVEN;
         else if (i == 8)
-            return EIGHT;
+            return Display::EIGHT;
         else
             return "";
     }
@@ -43,9 +43,9 @@ namespace IrukakunOthello
         switch (c)
         {
         case BLACK:
-            return BLACK_DISK;
+            return Display::BLACK_DISK;
         case WHITE:
-            return WHITE_DISK;
+            return Display::WHITE_DISK;
         }
         assert(false);
         return "";
@@ -59,9 +59,9 @@ namespace IrukakunOthello
         if (i == 0)
         {
             if (j == 0)
-                return FULL_WIDTH_SPACE;
+                return Display::FULL_WIDTH_SPACE;
             else if (j == 9)
-                return CRLF;
+                return Display::CRLF;
             else
                 return getNumberStr(j);
         }
@@ -70,43 +70,43 @@ namespace IrukakunOthello
             if (j == 0)
                 return getNumberStr(i);
             else if (j == 9)
-                return CRLF;
+                return Display::CRLF;
             else
-                return FULL_WIDTH_DOT;
+                return Display::FULL_WIDTH_DOT;
         }
         else if (i == 4)
         {
             if (j == 0)
                 return getNumberStr(i);
             else if (j == 9)
-                return CRLF;
+                return Display::CRLF;
             else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                return FULL_WIDTH_DOT;
+                return Display::FULL_WIDTH_DOT;
             else if (j == 4)
-                return BLACK_DISK;
+                return Display::BLACK_DISK;
             else if (j == 5)
-                return WHITE_DISK;
+                return Display::WHITE_DISK;
         }
         else if (i == 5)
         {
             if (j == 0)
                 return getNumberStr(i);
             else if (j == 9)
-                return CRLF;
+                return Display::CRLF;
             else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                return FULL_WIDTH_DOT;
+                return Display::FULL_WIDTH_DOT;
             else if (j == 4)
-                return WHITE_DISK;
+                return Display::WHITE_DISK;
             else if (j == 5)
-                return BLACK_DISK;
+                return Display::BLACK_DISK;
         }
         else
         {
             // i == 9
             if (j == 9)
-                return CRLF;
+                return Display::CRLF;
             else
-                return FULL_WIDTH_SPACE;
+                return Display::FULL_WIDTH_SPACE;
         }
         assert(false);
         return "";

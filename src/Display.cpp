@@ -6,19 +6,19 @@
 
 namespace IrukakunOthello
 {
-    const std::string FULL_WIDTH_SPACE = "　";
-    const std::string CRLF = "\r\n";
-    const std::string FULL_WIDTH_DOT = "・";
-    const std::string BLACK_DISK = "●";
-    const std::string WHITE_DISK = "○";
-    const std::string ONE = "１";
-    const std::string TWO = "２";
-    const std::string THREE = "３";
-    const std::string FOUR = "４";
-    const std::string FIVE = "５";
-    const std::string SIX = "６";
-    const std::string SEVEN = "７";
-    const std::string EIGHT = "８";
+    const std::string Display::FULL_WIDTH_SPACE = "　";
+    const std::string Display::CRLF = "\r\n";
+    const std::string Display::FULL_WIDTH_DOT = "・";
+    const std::string Display::BLACK_DISK = "●";
+    const std::string Display::WHITE_DISK = "○";
+    const std::string Display::ONE = "１";
+    const std::string Display::TWO = "２";
+    const std::string Display::THREE = "３";
+    const std::string Display::FOUR = "４";
+    const std::string Display::FIVE = "５";
+    const std::string Display::SIX = "６";
+    const std::string Display::SEVEN = "７";
+    const std::string Display::EIGHT = "８";
 
     Display::Element::Element(std::string letter, short x, short y)
         : letter_(letter),
