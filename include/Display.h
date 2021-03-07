@@ -42,8 +42,12 @@ namespace IrukakunOthello
         // 内容を初期化した状態でコンソールに表示する
         // このメソッド呼び出しにより各要素の画面上の表示位置が設定される
         void initializeDisplay();
-        // 指定された行列の位置に第3引数の文字を設定する
+        // 指定された行列の位置の要素に第3引数の文字を設定する
         void setLetter(std::size_t rowNo, std::size_t colNo, std::string letter);
+        // 指定された行列の位置の要素の内容をコンソール出力する
+        void draw(std::size_t rowNo, std::size_t colNo) const;
+        // 全要素をコンソール出力する
+        void drawAll() const;
         std::string toString() const;
 
     private:
@@ -66,6 +70,7 @@ namespace IrukakunOthello
             void setLetter(std::string letter);
             void setX(short x);
             void setY(short y);
+            void draw() const;
             std::string toString() const;
 
         private:

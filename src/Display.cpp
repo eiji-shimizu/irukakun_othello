@@ -84,6 +84,15 @@ namespace IrukakunOthello
         y_ = y;
     }
 
+    void Display::Element::draw() const
+    {
+        short saveX, saveY;
+        getCursorPosition(saveX, saveY);
+        setCursorPosition(x_, y_);
+        std::cout << letter_;
+        setCursorPosition(saveX, saveY);
+    }
+
     std::string Display::Element::toString() const
     {
         return letter_;
@@ -157,7 +166,7 @@ namespace IrukakunOthello
                 else
                 {
                     // i == 9
-                    if (j == 0)
+                    if (j == 9)
                         data_[i][j].setLetter(CRLF);
                     else
                         data_[i][j].setLetter(FULL_WIDTH_SPACE);
@@ -175,6 +184,22 @@ namespace IrukakunOthello
     void Display::setLetter(std::size_t rowNo, std::size_t colNo, std::string letter)
     {
         data_[rowNo][colNo].setLetter(letter);
+    }
+
+    void Display::draw(std::size_t rowNo, std::size_t colNo) const
+    {
+        data_[rowNo][colNo].draw();
+    }
+
+    void Display::drawAll() const
+    {
+        for (std::size_t i = 0; i < data_.size(); i++)
+        {
+            for (std::size_t j = 0; j < data_[i].size(); j++)
+            {
+                draw(i, j);
+            }
+        }
     }
 
     std::string Display::toString() const
