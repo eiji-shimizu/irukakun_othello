@@ -6,7 +6,8 @@ namespace IrukakunOthello
     enum Color
     {
         BLACK,
-        WHITE
+        WHITE,
+        RED // assert確認用,後に消す
     };
 
     class Display;
@@ -25,6 +26,10 @@ namespace IrukakunOthello
         OthelloGame(OthelloGame &&) = delete;
         OthelloGame &operator=(OthelloGame &&) = delete;
 
+        // 初期化処理
+        void initialize();
+        // オセロゲームを開始する.
+        void run();
         // 指定された升目にプレイヤーの色の石を設定する.
         // 升目は左上から順に(行,列)で(1,1)(1,2) ... (1,8)
         // (8,1)(8,2)...(8,8)と右下に向かって指定する.
@@ -39,6 +44,8 @@ namespace IrukakunOthello
         Display &display_;
         // プレイヤーの石の色
         Color playerColor_;
+        // コンソール上の入力開始位置
+        short startX_, startY_;
     };
 
 } // namespace IrukakunOthello

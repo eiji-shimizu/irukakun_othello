@@ -23,16 +23,10 @@ int main()
         // display.setLetter(0, 0, BLACK_DISK);
         // display.setLetter(6, 7, WHITE_DISK);
         // std::cout << display.toString();
-        display.initializeDisplay();
 
         OthelloGame game(display);
-
-        short rowNo, colNo;
-        while (std::cin >> rowNo >> colNo)
-        {
-            game.putDisk(rowNo, colNo);
-            game.reDraw(rowNo, colNo);
-        }
+        game.initialize();
+        game.run();
     }
     catch (std::exception &e)
     {

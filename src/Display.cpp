@@ -20,29 +20,6 @@ namespace IrukakunOthello
     const std::string SEVEN = "７";
     const std::string EIGHT = "８";
 
-    std::string getNumberStr(const int i)
-    {
-
-        if (i == 1)
-            return ONE;
-        else if (i == 2)
-            return TWO;
-        else if (i == 3)
-            return THREE;
-        else if (i == 4)
-            return FOUR;
-        else if (i == 5)
-            return FIVE;
-        else if (i == 6)
-            return SIX;
-        else if (i == 7)
-            return SEVEN;
-        else if (i == 8)
-            return EIGHT;
-        else
-            return "";
-    }
-
     Display::Element::Element(std::string letter, short x, short y)
         : letter_(letter),
           x_(x),
@@ -112,70 +89,21 @@ namespace IrukakunOthello
     各要素をオセロゲーム用に初期表示する.
     各要素表示直前にカーソル位置を取得して各要素の表示位置を設定する.
     */
-    void Display::initializeDisplay()
+    void Display::initializeDisplay(std::string (*initialValueGenerator)(const std::size_t i, const std::size_t j))
     {
         for (std::size_t i = 0; i < data_.size(); i++)
         {
             for (std::size_t j = 0; j < data_[i].size(); j++)
             {
                 // 初期表示時の表示文字を設定
-                if (i == 0)
-                {
-                    if (j == 0)
-                        data_[i][j].setLetter(FULL_WIDTH_SPACE);
-                    else if (j == 9)
-                        data_[i][j].setLetter(CRLF);
-                    else
-                        data_[i][j].setLetter(getNumberStr(j));
-                }
-                else if ((1 <= i && i <= 3) || (6 <= i && i <= 8))
-                {
-                    if (j == 0)
-                        data_[i][j].setLetter(getNumberStr(i));
-                    else if (j == 9)
-                        data_[i][j].setLetter(CRLF);
-                    else
-                        data_[i][j].setLetter(FULL_WIDTH_DOT);
-                }
-                else if (i == 4)
-                {
-                    if (j == 0)
-                        data_[i][j].setLetter(getNumberStr(i));
-                    else if (j == 9)
-                        data_[i][j].setLetter(CRLF);
-                    else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                        data_[i][j].setLetter(FULL_WIDTH_DOT);
-                    else if (j == 4)
-                        data_[i][j].setLetter(BLACK_DISK);
-                    else if (j == 5)
-                        data_[i][j].setLetter(WHITE_DISK);
-                }
-                else if (i == 5)
-                {
-                    if (j == 0)
-                        data_[i][j].setLetter(getNumberStr(i));
-                    else if (j == 9)
-                        data_[i][j].setLetter(CRLF);
-                    else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                        data_[i][j].setLetter(FULL_WIDTH_DOT);
-                    else if (j == 4)
-                        data_[i][j].setLetter(WHITE_DISK);
-                    else if (j == 5)
-                        data_[i][j].setLetter(BLACK_DISK);
-                }
-                else
-                {
-                    // i == 9
-                    if (j == 9)
-                        data_[i][j].setLetter(CRLF);
-                    else
-                        data_[i][j].setLetter(FULL_WIDTH_SPACE);
-                }
-
+                std::string s = initialValueGenerator(i, j);
+                data_[i][j].setLetter(s);
+                // 表示位置を退避
                 short x, y;
                 getCursorPosition(x, y);
                 data_[i][j].setX(x);
                 data_[i][j].setY(y);
+                // 初期表示
                 std::cout << data_[i][j].toString();
             }
         }
@@ -200,6 +128,16 @@ namespace IrukakunOthello
                 draw(i, j);
             }
         }
+    }
+
+    void Display::getCurrentCursorPosition(short &x, short &y) const
+    {
+        getCursorPosition(x, y);
+    }
+
+    void Display::setCurrentCursorPosition(const short x, const short y) const
+    {
+        setCursorPosition(x, y);
     }
 
     std::string Display::toString() const

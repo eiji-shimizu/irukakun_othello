@@ -40,14 +40,19 @@ namespace IrukakunOthello
         Display &operator=(Display &&) = delete;
 
         // 内容を初期化した状態でコンソールに表示する
+        // 添え字[i][j]に応じて初期表示したい内容を返す関数ポインタを引数にとる
         // このメソッド呼び出しにより各要素の画面上の表示位置が設定される
-        void initializeDisplay();
+        void initializeDisplay(std::string (*initialValueGenerator)(const std::size_t i, const std::size_t j));
         // 指定された行列の位置の要素に第3引数の文字を設定する
         void setLetter(std::size_t rowNo, std::size_t colNo, std::string letter);
         // 指定された行列の位置の要素の内容をコンソール出力する
         void draw(std::size_t rowNo, std::size_t colNo) const;
         // 全要素をコンソール出力する
         void drawAll() const;
+        // 現在のカーソル位置を引数に設定する
+        void getCurrentCursorPosition(short &x, short &y) const;
+        // カーソル位置を設定する
+        void setCurrentCursorPosition(const short x, const short y) const;
         std::string toString() const;
 
     private:
