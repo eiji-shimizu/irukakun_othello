@@ -40,9 +40,9 @@ namespace IrukakunOthello
     }
 
     // オセロの石の色をDisplayクラスのための対応する文字列に変換して返す
-    std::string convertForDisplay(const Color c)
+    std::string convertForDisplay(const Disk d)
     {
-        switch (c)
+        switch (d)
         {
         case BLACK:
             return Display::BLACK_DISK;
@@ -76,7 +76,7 @@ namespace IrukakunOthello
             else if (j == 9)
                 return Display::CRLF;
             else
-                return Display::FULL_WIDTH_DOT;
+                return Display::FULL_WIDTH_SPACE;
         }
         else if (i == 4)
         {
@@ -84,12 +84,8 @@ namespace IrukakunOthello
                 return getNumberStr(i);
             else if (j == 9)
                 return Display::CRLF;
-            else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                return Display::FULL_WIDTH_DOT;
-            else if (j == 4)
-                return Display::BLACK_DISK;
-            else if (j == 5)
-                return Display::WHITE_DISK;
+            else
+                return Display::FULL_WIDTH_SPACE;
         }
         else if (i == 5)
         {
@@ -97,12 +93,8 @@ namespace IrukakunOthello
                 return getNumberStr(i);
             else if (j == 9)
                 return Display::CRLF;
-            else if ((1 <= j && j <= 3) || (6 <= j && j <= 8))
-                return Display::FULL_WIDTH_DOT;
-            else if (j == 4)
-                return Display::WHITE_DISK;
-            else if (j == 5)
-                return Display::BLACK_DISK;
+            else
+                return Display::FULL_WIDTH_SPACE;
         }
         else
         {
@@ -116,9 +108,46 @@ namespace IrukakunOthello
         return "";
     }
 
+    Square::Square()
+        : disk_(NONE),
+          rowNo_(0),
+          colNo_(0)
+    {
+    }
+
+    void Square::setDisk(Disk d)
+    {
+        disk_ = d;
+    }
+
+    void Square::setRowNo(short s)
+    {
+        rowNo_ = s;
+    }
+
+    void Square::setColNo(short s)
+    {
+        colNo_ = s;
+    }
+
+    Disk Square::disk() const
+    {
+        return disk_;
+    }
+
+    short Square::rowNo() const
+    {
+        return rowNo_;
+    }
+
+    short Square::colNo() const
+    {
+        return colNo_;
+    }
+
     OthelloGame::OthelloGame(Display &d)
         : display_(d),
-          playerColor_(BLACK)
+          playerDisk_(BLACK)
     {
     }
 
@@ -131,6 +160,8 @@ namespace IrukakunOthello
     {
         display_.initializeDisplay(initialValueGenerator);
         display_.getCurrentCursorPosition(startX_, startY_);
+        boardInitialize();
+        update();
     }
 
     void OthelloGame::run()
@@ -139,6 +170,8 @@ namespace IrukakunOthello
         char col = ' ';
         while (std::cin)
         {
+            update();
+
             std::cin >> row;
             if (!std::cin)
             {
@@ -160,7 +193,6 @@ namespace IrukakunOthello
                 if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
                 {
                     putDisk(rowNo, colNo);
-                    reDraw(rowNo, colNo);
                 }
             }
             else
@@ -186,23 +218,84 @@ namespace IrukakunOthello
 
     void OthelloGame::putDisk(const short squareRowNo, const short squareColNo)
     {
-        putDisk(squareRowNo, squareColNo, playerColor_);
+        putDisk(squareRowNo, squareColNo, playerDisk_);
     }
 
-    void OthelloGame::putDisk(const short squareRowNo, const short squareColNo, const Color c)
+    void OthelloGame::putDisk(const short squareRowNo, const short squareColNo, const Disk d)
     {
-        short rowNo = squareRowNo;
-        short colNo = squareColNo;
-        convertForDisplay(rowNo, colNo);
-        display_.setLetter(rowNo, colNo, convertForDisplay(c));
+        assert((1 <= squareRowNo && squareRowNo <= rowNoUpperLimit));
+        assert((1 <= squareColNo && squareColNo <= colNoUpperLimit));
+        // TODO: オセロゲームとして有効な手かどうかの入力チェック
+        board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
     }
 
     void OthelloGame::reDraw(const short squareRowNo, const short squareColNo)
     {
+        assert((1 <= squareRowNo && squareRowNo <= rowNoUpperLimit));
+        assert((1 <= squareColNo && squareColNo <= colNoUpperLimit));
         short rowNo = squareRowNo;
         short colNo = squareColNo;
         convertForDisplay(rowNo, colNo);
         display_.draw(rowNo, colNo);
+    }
+
+    void OthelloGame::boardInitialize()
+    {
+        for (std::size_t i = 0; i < board_.size(); i++)
+        {
+            for (std::size_t j = 0; j < board_[i].size(); j++)
+            {
+                board_[i][j].setRowNo(i + 1);
+                board_[i][j].setColNo(j + 1);
+
+                if ((0 <= i && i <= 2) || (5 <= i && i <= 7))
+                {
+                    board_[i][j].setDisk(NONE);
+                }
+                else if (i == 3)
+                {
+                    if (j == 3)
+                        board_[i][j].setDisk(BLACK);
+                    else if (j == 4)
+                        board_[i][j].setDisk(WHITE);
+                    else
+                        board_[i][j].setDisk(NONE);
+                }
+                else
+                {
+                    // i == 4
+                    if (j == 3)
+                        board_[i][j].setDisk(WHITE);
+                    else if (j == 4)
+                        board_[i][j].setDisk(BLACK);
+                    else
+                        board_[i][j].setDisk(NONE);
+                }
+            }
+        }
+    }
+
+    void OthelloGame::sendDataToDisplay(const short squareRowNo, const short squareColNo)
+    {
+        assert((1 <= squareRowNo && squareRowNo <= rowNoUpperLimit));
+        assert((1 <= squareColNo && squareColNo <= colNoUpperLimit));
+        Square s = board_[squareRowNo - 1][squareColNo - 1];
+        short rowNo = s.rowNo();
+        short colNo = s.colNo();
+        convertForDisplay(rowNo, colNo);
+        display_.setLetter(rowNo, colNo, convertForDisplay(s.disk()));
+    }
+
+    void OthelloGame::update()
+    {
+        for (std::size_t i = 0; i < board_.size(); i++)
+        {
+            for (std::size_t j = 0; j < board_[i].size(); j++)
+            {
+                sendDataToDisplay(board_[i][j].rowNo(), board_[i][j].colNo());
+                reDraw(board_[i][j].rowNo(), board_[i][j].colNo());
+            }
+        }
     }
 
 } // IrukakunOthello
