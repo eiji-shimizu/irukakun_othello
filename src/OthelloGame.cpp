@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <iostream>
+#include <vector>
 
 namespace IrukakunOthello
 {
@@ -108,6 +109,16 @@ namespace IrukakunOthello
         return "";
     }
 
+    bool isContain(const Square s, std::vector<Square> &validList)
+    {
+        for (const Square e : validList)
+        {
+            if (s.rowNo() == e.rowNo() && s.colNo() == e.colNo())
+                return true;
+        }
+        return false;
+    }
+
     Square::Square()
         : disk_(NONE),
           rowNo_(0),
@@ -145,6 +156,16 @@ namespace IrukakunOthello
         return colNo_;
     }
 
+    bool Square::isNone() const
+    {
+        return disk_ == NONE;
+    }
+
+    bool Square::isNullObject() const
+    {
+        return rowNo() <= 0 || colNo() <= 0;
+    }
+
     OthelloGame::OthelloGame(Display &d)
         : display_(d),
           playerDisk_(BLACK)
@@ -161,7 +182,6 @@ namespace IrukakunOthello
         display_.initializeDisplay(initialValueGenerator);
         display_.getCurrentCursorPosition(startX_, startY_);
         boardInitialize();
-        update();
     }
 
     void OthelloGame::run()
@@ -170,7 +190,7 @@ namespace IrukakunOthello
         char col = ' ';
         while (std::cin)
         {
-            update();
+            updateDisplay();
 
             std::cin >> row;
             if (!std::cin)
@@ -226,7 +246,14 @@ namespace IrukakunOthello
         assert((1 <= squareRowNo && squareRowNo <= rowNoUpperLimit));
         assert((1 <= squareColNo && squareColNo <= colNoUpperLimit));
         // TODO: オセロゲームとして有効な手かどうかの入力チェック
-        board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
+        Square s;
+        s.setRowNo(squareRowNo);
+        s.setColNo(squareColNo);
+        s.setDisk(d);
+        if (isContain(s, getValidSquareList(d)))
+        {
+            board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
+        }
     }
 
     void OthelloGame::reDraw(const short squareRowNo, const short squareColNo)
@@ -286,7 +313,7 @@ namespace IrukakunOthello
         display_.setLetter(rowNo, colNo, convertForDisplay(s.disk()));
     }
 
-    void OthelloGame::update()
+    void OthelloGame::updateDisplay()
     {
         for (std::size_t i = 0; i < board_.size(); i++)
         {
@@ -296,6 +323,239 @@ namespace IrukakunOthello
                 reDraw(board_[i][j].rowNo(), board_[i][j].colNo());
             }
         }
+    }
+
+    std::vector<Square> OthelloGame::getValidSquareList(const Disk d)
+    {
+        std::vector<Square> result;
+        for (std::size_t i = 0; i < board_.size(); i++)
+        {
+            for (std::size_t j = 0; j < board_[i].size(); j++)
+            {
+                Square s = board_[i][j];
+                if (s.disk() == NONE)
+                {
+                    // 上方向
+                    Square up = getUpSquare(s);
+                    if (!up.isNullObject() && !up.isNone() && (up.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getUpSquare, up, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "up" << std::endl;
+
+                    // 下方向
+                    Square down = getDownSquare(s);
+                    if (!down.isNullObject() && !down.isNone() && (down.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getDownSquare, down, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "down" << std::endl;
+
+                    // 左方向
+                    Square left = getLeftSquare(s);
+                    if (!left.isNullObject() && !left.isNone() && (left.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getLeftSquare, left, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "left" << std::endl;
+
+                    // 右方向
+                    Square right = getRightSquare(s);
+                    if (!right.isNullObject() && !right.isNone() && (right.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getRightSquare, right, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "right" << std::endl;
+
+                    // 右上方向
+                    Square upRight = getUpRightSquare(s);
+                    if (!upRight.isNullObject() && !upRight.isNone() && (upRight.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getUpRightSquare, upRight, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "upRight" << std::endl;
+
+                    // 右下方向
+                    Square downRight = getDownRightSquare(s);
+                    if (!downRight.isNullObject() && !downRight.isNone() && (downRight.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getDownRightSquare, downRight, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "downRight" << std::endl;
+
+                    // 左上方向
+                    Square upLeft = getUpLeftSquare(s);
+                    if (!upLeft.isNullObject() && !upLeft.isNone() && (upLeft.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getUpLeftSquare, upLeft, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "upLeft" << std::endl;
+
+                    // 左下方向
+                    Square downLeft = getDownLeftSquare(s);
+                    if (!downLeft.isNullObject() && !downLeft.isNone() && (downLeft.disk() != d))
+                    {
+                        // TODO: さらにこの方向の先に自身と同じ色があるかの判定が必要
+                        Square searchResult = search(&OthelloGame::getDownLeftSquare, downLeft, d);
+                        if (!searchResult.isNullObject() && !searchResult.isNone())
+                        {
+                            result.push_back(s);
+                            continue;
+                        }
+                    }
+
+                    //std::cout << "downLeft" << std::endl;
+                }
+            }
+        }
+        return result;
+    }
+
+    Square OthelloGame::getUpSquare(const Square s)
+    {
+        Square result;
+        if (s.rowNo() <= 1)
+            return result;
+
+        return board_[s.rowNo() - 2][s.colNo() - 1];
+    }
+
+    Square OthelloGame::getDownSquare(const Square s)
+    {
+        Square result;
+        if (s.rowNo() >= 8)
+            return result;
+
+        return board_[s.rowNo()][s.colNo() - 1];
+    }
+
+    Square OthelloGame::getLeftSquare(const Square s)
+    {
+        Square result;
+        if (s.colNo() <= 1)
+            return result;
+
+        return board_[s.rowNo() - 1][s.colNo() - 2];
+    }
+
+    Square OthelloGame::getRightSquare(const Square s)
+    {
+        Square result;
+        if (s.colNo() >= 8)
+            return result;
+
+        return board_[s.rowNo() - 1][s.colNo()];
+    }
+
+    Square OthelloGame::getUpRightSquare(const Square s)
+    {
+        Square result;
+        if (getUpSquare(s).isNullObject() ||
+            getRightSquare(s).isNullObject())
+        {
+            return result;
+        }
+
+        return board_[s.rowNo() - 2][s.colNo()];
+    }
+
+    Square OthelloGame::getDownRightSquare(const Square s)
+    {
+        Square result;
+        if (getDownSquare(s).isNullObject() ||
+            getRightSquare(s).isNullObject())
+        {
+            return result;
+        }
+
+        return board_[s.rowNo()][s.colNo()];
+    }
+
+    Square OthelloGame::getUpLeftSquare(const Square s)
+    {
+        Square result;
+        if (getUpSquare(s).isNullObject() ||
+            getLeftSquare(s).isNullObject())
+        {
+            return result;
+        }
+
+        return board_[s.rowNo() - 2][s.colNo() - 2];
+    }
+
+    Square OthelloGame::getDownLeftSquare(const Square s)
+    {
+        Square result;
+        if (getDownSquare(s).isNullObject() ||
+            getLeftSquare(s).isNullObject())
+        {
+            return result;
+        }
+
+        return board_[s.rowNo()][s.colNo() - 2];
+    }
+
+    Square OthelloGame::search(searchFunc f, const Square s, const Disk d)
+    {
+        Square result;
+        Square temp = s;
+        while (true)
+        {
+            result = (this->*f)(temp);
+            temp = result;
+            if (result.isNullObject() || result.isNone() || result.disk() == d)
+                break;
+        }
+        return result;
     }
 
 } // IrukakunOthello

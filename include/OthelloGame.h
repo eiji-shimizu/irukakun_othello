@@ -2,6 +2,7 @@
 #define IRUKAKUN_OTHELLO_OthelloGame_INCLUDED
 
 #include <array>
+#include <vector>
 namespace IrukakunOthello
 {
     enum Disk
@@ -20,7 +21,7 @@ namespace IrukakunOthello
 
         Square(const Square &) = default;
         Square &operator=(const Square &) = default;
-        Square(Square &&) = delete;
+        Square(Square &&) = default;
         Square &operator=(Square &&) = default;
 
         void setDisk(Disk d);
@@ -30,6 +31,11 @@ namespace IrukakunOthello
         Disk disk() const;
         short rowNo() const;
         short colNo() const;
+
+        // DiskにNONEが設定されている場合にtrue
+        bool isNone() const;
+        // rowNoとcolNoのどちらか一方でも0以下ならばtrue
+        bool isNullObject() const;
 
     private:
         Disk disk_;
@@ -61,10 +67,14 @@ namespace IrukakunOthello
         void run();
 
     private:
+        static const int rowNoUpperLimit = 8;
+        static const int colNoUpperLimit = 8;
+        using OthelloBoard = std::array<std::array<Square, rowNoUpperLimit>, colNoUpperLimit>;
+
         // オセロのボードを初期化する
         void boardInitialize();
         // オセロのボードの内容でディスプレイを更新する
-        void update();
+        void updateDisplay();
 
         // 指定された升目の内容をディスプレイクラスに送る
         void sendDataToDisplay(const short squareRowNo, const short squareColNo);
@@ -77,14 +87,29 @@ namespace IrukakunOthello
         void putDisk(const short squareRowNo, const short squareColNo);
         // 第3引数で指定された色の石を指定された升目に設定する
         void putDisk(const short squareRowNo, const short squareColNo, const Disk d);
+        // 指定された色の石が置ける升のリストを返す
+        std::vector<Square> getValidSquareList(const Disk d);
 
-        static const int rowNoUpperLimit = 8;
-        static const int colNoUpperLimit = 8;
+        // それぞれ引数の上下左右のSquareを返す
+        Square getUpSquare(const Square s);
+        Square getDownSquare(const Square s);
+        Square getLeftSquare(const Square s);
+        Square getRightSquare(const Square s);
+        // それぞれ引数の右上,右下,左上,左下のSquareを返す
+        Square getUpRightSquare(const Square s);
+        Square getDownRightSquare(const Square s);
+        Square getUpLeftSquare(const Square s);
+        Square getDownLeftSquare(const Square s);
+        // 上記8つの関数どれかを引数にとり,第2引数に適用する
+        // その戻り値にまた適用していき,第3引数と一致するDiskを持つSquareが見つかればそれを返す
+        // ただしその過程でSquare::isNoneまたはSquare::isNullObjectがtrueとなるSquareがあればそれを返す
+        using searchFunc = Square (OthelloGame::*)(const Square s);
+        Square search(searchFunc f, const Square s, const Disk d);
 
         // ディスプレイへの参照
         Display &display_;
         // オセロのボード
-        std::array<std::array<Square, rowNoUpperLimit>, colNoUpperLimit> board_;
+        OthelloBoard board_;
         // プレイヤーの石の色
         Disk playerDisk_;
         // 対戦相手の石の色
