@@ -116,7 +116,7 @@ namespace IrukakunOthello
             data_[rowNo][colNo].setLetter(letter);
             return;
         }
-        throw std::out_of_range("out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
+        throw std::out_of_range("[FAILED] Display::setLetter : out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
     }
 
     void Display::draw(std::size_t rowNo, std::size_t colNo) const
@@ -126,7 +126,7 @@ namespace IrukakunOthello
             data_[rowNo][colNo].draw();
             return;
         }
-        throw std::out_of_range("out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
+        throw std::out_of_range("[FAILED] Display::draw : out_of_range error : (rowNo,colNo) = (" + std::to_string(rowNo) + "," + std::to_string(colNo) + ")");
     }
 
     void Display::drawAll() const

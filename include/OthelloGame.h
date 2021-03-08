@@ -16,6 +16,9 @@ namespace IrukakunOthello
     class OthelloGame
     {
     public:
+        // 入力コマンド文字
+        static const char QUIT;
+
         OthelloGame(Display &d);
         OthelloGame() = delete;
         ~OthelloGame();

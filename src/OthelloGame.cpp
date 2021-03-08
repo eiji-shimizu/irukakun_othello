@@ -6,6 +6,8 @@
 
 namespace IrukakunOthello
 {
+    const char OthelloGame::QUIT = 'q';
+
     std::string getNumberStr(const int i)
     {
 
@@ -133,12 +135,52 @@ namespace IrukakunOthello
 
     void OthelloGame::run()
     {
-        short rowNo, colNo;
-        while (std::cin >> rowNo >> colNo)
+        char row = ' ';
+        char col = ' ';
+        while (std::cin)
         {
-            putDisk(rowNo, colNo);
-            reDraw(rowNo, colNo);
+            std::cin >> row;
+            if (!std::cin)
+            {
+                break;
+            }
+            if (std::isdigit(row))
+            {
+                std::cin >> col;
+            }
+            if (!std::cin)
+            {
+                break;
+            }
+
+            if (std::isdigit(row) && std::isdigit(col))
+            {
+                short rowNo = std::stoi(std::string{row});
+                short colNo = std::stoi(std::string{col});
+                if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
+                {
+                    putDisk(rowNo, colNo);
+                    reDraw(rowNo, colNo);
+                }
+            }
+            else
+            {
+                char c = row;
+                if (std::isdigit(c))
+                {
+                    c = col;
+                }
+                switch (c)
+                {
+                case QUIT:
+                    return;
+                }
+            }
             display_.setCurrentCursorPosition(startX_, startY_);
+        }
+        if (!std::cin)
+        {
+            throw std::runtime_error("[FAILED] OthelloGame::run : std::cin error");
         }
     }
 

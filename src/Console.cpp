@@ -1,5 +1,7 @@
 #include "Console.h"
 
+#include <stdexcept>
+
 #include <windows.h>
 
 namespace IrukakunOthello
@@ -8,7 +10,10 @@ namespace IrukakunOthello
     {
         HANDLE hCons = GetStdHandle(STD_OUTPUT_HANDLE);
         CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(hCons, &csbi);
+        if (!GetConsoleScreenBufferInfo(hCons, &csbi))
+        {
+            throw std::runtime_error("[FAILED] getCursorPosition : GetConsoleScreenBufferInfo error");
+        }
         x = csbi.dwCursorPosition.X;
         y = csbi.dwCursorPosition.Y;
     }
@@ -19,7 +24,10 @@ namespace IrukakunOthello
         COORD pos;
         pos.X = x;
         pos.Y = y;
-        SetConsoleCursorPosition(hCons, pos);
+        if (!SetConsoleCursorPosition(hCons, pos))
+        {
+            throw std::runtime_error("[FAILED] setCursorPosition : SetConsoleCursorPosition error");
+        }
     }
 
 } // namespace IrukakunOthello
