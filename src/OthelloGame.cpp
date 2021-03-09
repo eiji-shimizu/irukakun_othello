@@ -3,10 +3,10 @@
 
 #include <assert.h>
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <random>
 
 namespace IrukakunOthello
 {
@@ -422,6 +422,15 @@ namespace IrukakunOthello
             return result;
         }
 
+        template <typename T>
+        int getRandom(T lower, T upper)
+        {
+            std::random_device seed_gen;
+            std::mt19937 engine(seed_gen());
+            std::uniform_int_distribution<T> dist(lower, upper);
+            return dist(engine);
+        }
+
     } // namespace
 
     /* Square class */
@@ -517,7 +526,7 @@ namespace IrukakunOthello
             if (!last.isNullObject())
             {
                 // 即座に裏返した内容が描画されないようにスリープする
-                std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                std::this_thread::sleep_for(std::chrono::milliseconds(350));
                 reverse(last);
                 // short temp = reverse(last);
                 // std::ofstream ofs("othello.log",std::ios::app);
@@ -586,7 +595,8 @@ namespace IrukakunOthello
                 std::vector<Square> list = getValidSquareList(opponentDisk_);
                 if (list.size() > 0)
                 {
-                    Square choice = list[0];
+                    int i = list.size() - 1;
+                    Square choice = list[getRandom(0, i)];
                     // 即座に相手の手の内容が出力されないようにスリープする
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     last = putDisk(choice.rowNo(), choice.colNo(), opponentDisk_);
