@@ -27,10 +27,12 @@ namespace IrukakunOthello
         void setDisk(Disk d);
         void setRowNo(short s);
         void setColNo(short s);
+        void setUpdate(bool b);
 
         Disk disk() const;
         short rowNo() const;
         short colNo() const;
+        bool isUpdate() const;
 
         // DiskにNONEが設定されている場合にtrue
         bool isNone() const;
@@ -40,6 +42,9 @@ namespace IrukakunOthello
     private:
         Disk disk_;
         short rowNo_, colNo_;
+        // 内容(石の有無,石の色等)が更新された場合にtrueが設定される
+        // 内容をディスプレイに送った場合はfalseに戻る
+        bool update_;
     };
 
     class Display;
@@ -89,6 +94,10 @@ namespace IrukakunOthello
         void putDisk(const short squareRowNo, const short squareColNo, const Disk d);
         // 指定された色の石が置ける升のリストを返す
         std::vector<Square> getValidSquareList(const Disk d);
+        // 引数のSquareの状態で新たに石が置かれたとみなし,その結果として裏返される石の数を返す
+        short tryReverse(const Square s) const;
+        // 引数のSquareの状態で新たに石が置かれたとみなし,その結果として他の石を裏返し,裏返した数を返す
+        short reverse(const Square s);
 
         // それぞれ引数の上下左右のSquareを返す
         Square getUpSquare(const Square s);
