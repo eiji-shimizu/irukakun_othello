@@ -231,7 +231,18 @@ namespace IrukakunOthello
             Square searchResult = search(getUpSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+                short temp = std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getUpSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "up" << std::endl;
@@ -240,7 +251,18 @@ namespace IrukakunOthello
             searchResult = search(getDownSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+                short temp = std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getDownSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "down" << std::endl;
@@ -249,7 +271,18 @@ namespace IrukakunOthello
             searchResult = search(getLeftSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getLeftSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "left" << std::endl;
@@ -258,7 +291,18 @@ namespace IrukakunOthello
             searchResult = search(getRightSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getRightSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "right" << std::endl;
@@ -267,7 +311,18 @@ namespace IrukakunOthello
             searchResult = search(getUpRightSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getUpRightSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "upRight" << std::endl;
@@ -276,7 +331,18 @@ namespace IrukakunOthello
             searchResult = search(getDownRightSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getDownRightSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "downRight" << std::endl;
@@ -285,7 +351,18 @@ namespace IrukakunOthello
             searchResult = search(getUpLeftSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getUpLeftSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "upLeft" << std::endl;
@@ -294,7 +371,18 @@ namespace IrukakunOthello
             searchResult = search(getDownLeftSquare, board, s, s.disk());
             if (!searchResult.isNullObject() && !searchResult.isNone())
             {
-                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+                short temp = std::abs(searchResult.colNo() - s.colNo()) - 1;
+                result += temp;
+                if (eFlag)
+                {
+                    Square target = s;
+                    for (; temp > 0; temp--)
+                    {
+                        target = getDownLeftSquare(board, target);
+                        board[target.rowNo() - 1][target.colNo() - 1].setDisk(s.disk());
+                        board[target.rowNo() - 1][target.colNo() - 1].setUpdate(true);
+                    }
+                }
             }
 
             //std::cout << "downLeft" << std::endl;
@@ -461,19 +549,10 @@ namespace IrukakunOthello
             if (tryReverse(s) > 0)
             {
                 board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
-                //reverse(s);
                 board_[squareRowNo - 1][squareColNo - 1].setUpdate(true);
+                reverse(s);
             }
         }
-        // Square s;
-        // s.setRowNo(squareRowNo);
-        // s.setColNo(squareColNo);
-        // s.setDisk(d);
-        // if (isContain(s, getValidSquareList(d)))
-        // {
-        //     board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
-        //     board_[squareRowNo - 1][squareColNo - 1].setUpdate(true);
-        // }
     }
 
     void OthelloGame::reDraw(const short squareRowNo, const short squareColNo)
