@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <thread>
 #include <chrono>
@@ -407,6 +408,20 @@ namespace IrukakunOthello
             return reverseImpl(board, s, true);
         }
 
+        short countDisks(const OthelloGame::OthelloBoard &board, const Disk d)
+        {
+            short result = 0;
+            for (std::size_t i = 0; i < board.size(); i++)
+            {
+                for (std::size_t j = 0; j < board[i].size(); j++)
+                {
+                    if (board[i][j].disk() == d)
+                        ++result;
+                }
+            }
+            return result;
+        }
+
     } // namespace
 
     /* Square class */
@@ -504,7 +519,22 @@ namespace IrukakunOthello
                 // 即座に裏返した内容が描画されないようにスリープする
                 std::this_thread::sleep_for(std::chrono::milliseconds(250));
                 reverse(last);
+                // short temp = reverse(last);
+                // std::ofstream ofs("othello.log",std::ios::app);
+                // ofs << temp << "(" << last.rowNo() << "," << last.colNo() << ")" << std::endl;
                 last = Square();
+                // ターンを入れ替える
+                playerTurn_ = !playerTurn_;
+                continue;
+            }
+
+            if (isEndOfMatch())
+            {
+                break;
+            }
+            if ((playerTurn_ && getValidSquareList(playerDisk_).size() == 0) ||
+                (!playerTurn_ && getValidSquareList(opponentDisk_).size() == 0))
+            {
                 // ターンを入れ替える
                 playerTurn_ = !playerTurn_;
                 continue;
@@ -569,6 +599,21 @@ namespace IrukakunOthello
         {
             throw std::runtime_error("[FAILED] OthelloGame::run : std::cin error");
         }
+
+        std::cout << std::endl;
+        if (playerScore() > opponentScore())
+        {
+            std::cout << "YOU WON!! " << playerScore() << " : " << opponentScore() << std::endl;
+        }
+        else if (playerScore() < opponentScore())
+        {
+            std::cout << "YOU LOST. " << playerScore() << " : " << opponentScore() << std::endl;
+        }
+        else if (playerScore() == opponentScore())
+        {
+            std::cout << "DRAW. " << playerScore() << " : " << opponentScore() << std::endl;
+        }
+        std::cout << "THANK YOU FOR PLAYING" << std::endl;
     }
 
     Square OthelloGame::putDisk(const short squareRowNo, const short squareColNo, const Disk d)
@@ -674,7 +719,7 @@ namespace IrukakunOthello
         return reverseImpl(board_, s);
     }
 
-    std::vector<Square> OthelloGame::getValidSquareList(const Disk d)
+    std::vector<Square> OthelloGame::getValidSquareList(const Disk d) const
     {
         std::vector<Square> result;
         for (std::size_t i = 0; i < board_.size(); i++)
@@ -694,6 +739,21 @@ namespace IrukakunOthello
             }
         }
         return result;
+    }
+
+    bool OthelloGame::isEndOfMatch() const
+    {
+        return getValidSquareList(playerDisk_).size() + getValidSquareList(opponentDisk_).size() == 0;
+    }
+
+    short OthelloGame::playerScore() const
+    {
+        return countDisks(board_, playerDisk_);
+    }
+
+    short OthelloGame::opponentScore() const
+    {
+        return countDisks(board_, opponentDisk_);
     }
 
 } // IrukakunOthello

@@ -92,11 +92,17 @@ namespace IrukakunOthello
         // 戻り値:置いた升目のSquareオブジェクト,指定された升目と色が不正であった場合はSquare::isNullObjectがtrue
         Square putDisk(const short squareRowNo, const short squareColNo, const Disk d);
         // 指定された色の石が置ける升のリストを返す
-        std::vector<Square> getValidSquareList(const Disk d);
+        std::vector<Square> getValidSquareList(const Disk d) const;
         // 引数のSquareの状態で新たに石が置かれたとみなし,その結果として裏返される石の数を返す
         short tryReverse(const Square s) const;
         // 引数のSquareの状態で新たに石が置かれたとみなし,その結果として他の石を裏返し,裏返した数を返す
         short reverse(const Square s);
+        // 両者共に石を置ける升が無くなった場合にtrueを返す.
+        bool isEndOfMatch() const;
+        // プレイヤーの石の数を返す
+        short playerScore() const;
+        // 対戦相手の石の数を返す
+        short opponentScore() const;
 
         // ディスプレイへの参照
         Display &display_;
