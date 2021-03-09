@@ -120,7 +120,200 @@ namespace IrukakunOthello
             }
             return false;
         }
-    }
+
+        // それぞれ引数の上下左右のSquareを返す
+        Square getUpSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (s.rowNo() <= 1)
+                return result;
+
+            return board[s.rowNo() - 2][s.colNo() - 1];
+        }
+
+        Square getDownSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (s.rowNo() >= 8)
+                return result;
+
+            return board[s.rowNo()][s.colNo() - 1];
+        }
+
+        Square getLeftSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (s.colNo() <= 1)
+                return result;
+
+            return board[s.rowNo() - 1][s.colNo() - 2];
+        }
+
+        Square getRightSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (s.colNo() >= 8)
+                return result;
+
+            return board[s.rowNo() - 1][s.colNo()];
+        }
+
+        // それぞれ引数の右上,右下,左上,左下のSquareを返す
+        Square getUpRightSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (getUpSquare(board, s).isNullObject() ||
+                getRightSquare(board, s).isNullObject())
+            {
+                return result;
+            }
+
+            return board[s.rowNo() - 2][s.colNo()];
+        }
+
+        Square getDownRightSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (getDownSquare(board, s).isNullObject() ||
+                getRightSquare(board, s).isNullObject())
+            {
+                return result;
+            }
+
+            return board[s.rowNo()][s.colNo()];
+        }
+
+        Square getUpLeftSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (getUpSquare(board, s).isNullObject() ||
+                getLeftSquare(board, s).isNullObject())
+            {
+                return result;
+            }
+
+            return board[s.rowNo() - 2][s.colNo() - 2];
+        }
+
+        Square getDownLeftSquare(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            Square result;
+            if (getDownSquare(board, s).isNullObject() ||
+                getLeftSquare(board, s).isNullObject())
+            {
+                return result;
+            }
+
+            return board[s.rowNo()][s.colNo() - 2];
+        }
+
+        using searchFunc = Square (*)(OthelloGame::OthelloBoard &board, const Square s);
+        Square search(searchFunc f, OthelloGame::OthelloBoard &board, const Square s, const Disk d)
+        {
+            Square result;
+            Square temp = s;
+            while (true)
+            {
+                result = f(board, temp);
+                temp = result;
+                if (result.isNullObject() || result.isNone() || result.disk() == d)
+                    break;
+            }
+            return result;
+        }
+
+        // 引数のSquareの状態で新たに石が置かれたとみなし,その結果として裏返される石の数を返す.
+        // eFlagがtrueの場合はその過程で実際に石を裏返す.
+        short reverseImpl(OthelloGame::OthelloBoard &board, const Square s, bool eFlag)
+        {
+            short result = 0;
+            // 上方向
+            Square searchResult = search(getUpSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+            }
+
+            //std::cout << "up" << std::endl;
+
+            // 下方向
+            searchResult = search(getDownSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.rowNo() - s.rowNo()) - 1;
+            }
+
+            //std::cout << "down" << std::endl;
+
+            // 左方向
+            searchResult = search(getLeftSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "left" << std::endl;
+
+            // 右方向
+            searchResult = search(getRightSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "right" << std::endl;
+
+            // 右上方向
+            searchResult = search(getUpRightSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "upRight" << std::endl;
+
+            // 右下方向
+            searchResult = search(getDownRightSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "downRight" << std::endl;
+
+            // 左上方向
+            searchResult = search(getUpLeftSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "upLeft" << std::endl;
+
+            // 左下方向
+            searchResult = search(getDownLeftSquare, board, s, s.disk());
+            if (!searchResult.isNullObject() && !searchResult.isNone())
+            {
+                result += std::abs(searchResult.colNo() - s.colNo()) - 1;
+            }
+
+            //std::cout << "downLeft" << std::endl;
+            std::cout << result << std::endl;
+
+            return result;
+        }
+
+        short reverseImpl(const OthelloGame::OthelloBoard &board, const Square s)
+        {
+            return reverseImpl(const_cast<OthelloGame::OthelloBoard &>(board), s, false);
+        }
+
+        short reverseImpl(OthelloGame::OthelloBoard &board, const Square s)
+        {
+            return reverseImpl(board, s, true);
+        }
+
+    } // namespace
 
     Square::Square()
         : disk_(NONE),
@@ -259,15 +452,28 @@ namespace IrukakunOthello
     {
         assert((1 <= squareRowNo && squareRowNo <= rowNoUpperLimit));
         assert((1 <= squareColNo && squareColNo <= colNoUpperLimit));
-        Square s;
-        s.setRowNo(squareRowNo);
-        s.setColNo(squareColNo);
-        s.setDisk(d);
-        if (isContain(s, getValidSquareList(d)))
+        if (board_[squareRowNo - 1][squareColNo - 1].disk() == NONE)
         {
-            board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
-            board_[squareRowNo - 1][squareColNo - 1].setUpdate(true);
+            Square s;
+            s.setRowNo(squareRowNo);
+            s.setColNo(squareColNo);
+            s.setDisk(d);
+            if (tryReverse(s) > 0)
+            {
+                board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
+                //reverse(s);
+                board_[squareRowNo - 1][squareColNo - 1].setUpdate(true);
+            }
         }
+        // Square s;
+        // s.setRowNo(squareRowNo);
+        // s.setColNo(squareColNo);
+        // s.setDisk(d);
+        // if (isContain(s, getValidSquareList(d)))
+        // {
+        //     board_[squareRowNo - 1][squareColNo - 1].setDisk(d);
+        //     board_[squareRowNo - 1][squareColNo - 1].setUpdate(true);
+        // }
     }
 
     void OthelloGame::reDraw(const short squareRowNo, const short squareColNo)
@@ -341,6 +547,16 @@ namespace IrukakunOthello
                 }
             }
         }
+    }
+
+    short OthelloGame::tryReverse(const Square s) const
+    {
+        return reverseImpl(board_, s);
+    }
+
+    short OthelloGame::reverse(const Square s)
+    {
+        return reverseImpl(board_, s);
     }
 
     std::vector<Square> OthelloGame::getValidSquareList(const Disk d)

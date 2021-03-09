@@ -52,6 +52,9 @@ namespace IrukakunOthello
     class OthelloGame
     {
     public:
+        static const int rowNoUpperLimit = 8;
+        static const int colNoUpperLimit = 8;
+        using OthelloBoard = std::array<std::array<Square, rowNoUpperLimit>, colNoUpperLimit>;
         // 入力コマンド文字
         static const char QUIT;
 
@@ -72,10 +75,6 @@ namespace IrukakunOthello
         void run();
 
     private:
-        static const int rowNoUpperLimit = 8;
-        static const int colNoUpperLimit = 8;
-        using OthelloBoard = std::array<std::array<Square, rowNoUpperLimit>, colNoUpperLimit>;
-
         // オセロのボードを初期化する
         void boardInitialize();
         // オセロのボードの内容でディスプレイを更新する
