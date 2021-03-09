@@ -6,6 +6,7 @@
 
 namespace IrukakunOthello
 {
+    // 表示文字(型としては文字列だが全角1文字か半角2文字とする)
     const std::string Display::FULL_WIDTH_SPACE = "　";
     const std::string Display::CRLF = "\r\n";
     const std::string Display::FULL_WIDTH_DOT = "・";
@@ -20,6 +21,7 @@ namespace IrukakunOthello
     const std::string Display::SEVEN = "７";
     const std::string Display::EIGHT = "８";
 
+    /* Display::Element class */
     Display::Element::Element(std::string letter, short x, short y)
         : letter_(letter),
           x_(x),
@@ -75,6 +77,7 @@ namespace IrukakunOthello
         return letter_;
     }
 
+    /* Display class */
     Display::Display()
     {
         // noop
