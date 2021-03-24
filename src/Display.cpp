@@ -63,6 +63,16 @@ namespace IrukakunOthello
         y_ = y;
     }
 
+    short Display::Element::x() const
+    {
+        return x_;
+    }
+
+    short Display::Element::y() const
+    {
+        return y_;
+    }
+
     void Display::Element::draw() const
     {
         short saveX, saveY;
@@ -151,6 +161,37 @@ namespace IrukakunOthello
     void Display::setCurrentCursorPosition(const short x, const short y) const
     {
         setCursorPosition(x, y);
+    }
+
+    std::pair<int, int> Display::convertToElementIndex(const short x, const short y) const
+    {
+        int resultRowIndex = -1;
+        int resultColIndex = -1;
+        // x軸方向の走査(列の添え字が変化する)
+        for (std::size_t i = 0; i < data_[0].size(); i++)
+        {
+            if (x < data_[0][i].x())
+            {
+                break;
+            }
+            else
+            {
+                resultColIndex = i;
+            }
+        }
+        // y軸方向の走査(行の添え字が変化する)
+        for (std::size_t i = 0; i < data_.size(); i++)
+        {
+            if (y < data_[i][0].y())
+            {
+                break;
+            }
+            else
+            {
+                resultRowIndex = i;
+            }
+        }
+        return {resultRowIndex, resultColIndex};
     }
 
     std::string Display::toString() const

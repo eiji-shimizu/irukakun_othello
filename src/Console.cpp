@@ -10,39 +10,16 @@ namespace IrukakunOthello
 {
     namespace
     {
+        DWORD fdwSaveOldMode;
+        HANDLE hStdInput;
 
-        void setConsoleMode()
-        {
-            HANDLE hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-            if (hStdInput == INVALID_HANDLE_VALUE)
-            {
-                throw std::runtime_error("[FAILED] setConsoleMode : hStdInput error");
-            }
-            DWORD fdwMode;
-            fdwMode = ENABLE_ECHO_INPUT |
-                      ENABLE_INSERT_MODE |
-                      ENABLE_LINE_INPUT |
-                      ENABLE_MOUSE_INPUT |
-                      ENABLE_PROCESSED_INPUT |
-                      ENABLE_EXTENDED_FLAGS;
-            if (!SetConsoleMode(hStdInput, fdwMode))
-            {
-                throw std::runtime_error("[FAILED] setConsoleMode : SetConsoleMode error");
-            }
-        }
+        // 直前にクリックされた座標
+        short x, y;
 
     } // namespace
 
     InputType waitForInput()
     {
-        HANDLE hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-        if (hStdInput == INVALID_HANDLE_VALUE)
-        {
-            throw std::runtime_error("[FAILED] waitForInput : hStdInput error");
-        }
-
-        setConsoleMode();
-
         INPUT_RECORD inputRecord;
         DWORD numberOfEventsRead;
         for (;;)
@@ -51,41 +28,27 @@ namespace IrukakunOthello
             {
                 throw std::runtime_error("[FAILED] waitForInput : WaitForSingleObject error");
             }
-            //std::cout << "WaitForSingleObject end" << std::endl;
             if (!PeekConsoleInput(hStdInput, &inputRecord, 1, &numberOfEventsRead))
             {
-                throw std::runtime_error("[FAILED] waitForInput : ReadConsoleInput error");
+                throw std::runtime_error("[FAILED] waitForInput : PeekConsoleInput error");
             }
-            //std::cout << "PeekConsoleInput end" << std::endl;
             if (inputRecord.EventType == KEY_EVENT)
             {
-                std::cout << "KEY_EVENT" << std::endl;
                 return OTHER;
             }
             else if (inputRecord.EventType == MOUSE_EVENT)
             {
-                //std::cout << "MOUSE_EVENT" << std::endl;
                 if (inputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
                 {
                     if (!ReadConsoleInput(hStdInput, &inputRecord, 1, &numberOfEventsRead))
                     {
                         throw std::runtime_error("[FAILED] waitForInput : ReadConsoleInput error");
                     }
+                    x = inputRecord.Event.MouseEvent.dwMousePosition.X;
+                    y = inputRecord.Event.MouseEvent.dwMousePosition.Y;
                     return LEFT_CLICK;
                 }
             }
-            // else if (inputRecord.EventType == WINDOW_BUFFER_SIZE_EVENT)
-            // {
-            //     std::cout << "WINDOW_BUFFER_SIZE_EVENT" << std::endl;
-            // }
-            // else if (inputRecord.EventType == FOCUS_EVENT)
-            // {
-            //     std::cout << "FOCUS_EVENT" << std::endl;
-            // }
-            // else
-            // {
-            //     std::cout << "DEFAULT" << std::endl;
-            // }
 
             if (!ReadConsoleInput(hStdInput, &inputRecord, 1, &numberOfEventsRead))
             {
@@ -116,6 +79,45 @@ namespace IrukakunOthello
         {
             throw std::runtime_error("[FAILED] setCursorPosition : SetConsoleCursorPosition error");
         }
+    }
+
+    short getLastClickPositionX()
+    {
+        return x;
+    }
+
+    short getLastClickPositionY()
+    {
+        return y;
+    }
+
+    void initializeConsoleInputMode()
+    {
+        hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+        if (hStdInput == INVALID_HANDLE_VALUE)
+        {
+            throw std::runtime_error("[FAILED] setConsoleMode : hStdInput error");
+        }
+        if (!GetConsoleMode(hStdInput, &fdwSaveOldMode))
+        {
+            throw std::runtime_error("[FAILED] setConsoleMode : GetConsoleMode error");
+        }
+        DWORD fdwMode;
+        fdwMode = ENABLE_ECHO_INPUT |
+                  ENABLE_INSERT_MODE |
+                  ENABLE_LINE_INPUT |
+                  ENABLE_MOUSE_INPUT |
+                  ENABLE_PROCESSED_INPUT |
+                  ENABLE_EXTENDED_FLAGS;
+        if (!SetConsoleMode(hStdInput, fdwMode))
+        {
+            throw std::runtime_error("[FAILED] setConsoleMode : SetConsoleMode error");
+        }
+    }
+
+    void restoreConsoleInputMode()
+    {
+        SetConsoleMode(hStdInput, fdwSaveOldMode);
     }
 
 } // namespace IrukakunOthello

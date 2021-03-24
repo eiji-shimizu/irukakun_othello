@@ -14,6 +14,10 @@ namespace IrukakunOthello
     InputType waitForInput();
     void getCursorPosition(short &x, short &y);
     void setCursorPosition(const short x, const short y);
+    short getLastClickPositionX();
+    short getLastClickPositionY();
+    void initializeConsoleInputMode();
+    void restoreConsoleInputMode();
 
 } // namespace IrukakunOthello
 

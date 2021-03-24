@@ -3,6 +3,7 @@
 
 #include <array>
 #include <string>
+#include <utility>
 
 namespace IrukakunOthello
 {
@@ -52,6 +53,9 @@ namespace IrukakunOthello
         void getCurrentCursorPosition(short &x, short &y) const;
         // カーソル位置を設定する
         void setCurrentCursorPosition(const short x, const short y) const;
+        // 引数の座標を内に含む要素の添え字を返す
+        std::pair<int, int> convertToElementIndex(const short x, const short y) const;
+
         std::string toString() const;
 
     private:
@@ -74,6 +78,8 @@ namespace IrukakunOthello
             void setLetter(std::string letter);
             void setX(short x);
             void setY(short y);
+            short x() const;
+            short y() const;
             void draw() const;
             std::string toString() const;
 

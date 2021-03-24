@@ -39,6 +39,14 @@ namespace IrukakunOthello
                 return "";
         }
 
+        // Displayの行列指定のインデックスを引数にとり
+        // その値をオセロの升目指定のための対応する値に変換する
+        // 現状では両者の指定が一致しているので処理は無い
+        void convertForBoard(short &rowNo, short &colNo)
+        {
+            // 必要になれば処理追加
+        }
+
         // オセロの升目の行列指定の値を引数にとり
         // その値をDisplayクラスのための対応する値に変換する
         // 現状では両者の指定が一致しているので処理は無い
@@ -505,6 +513,7 @@ namespace IrukakunOthello
     OthelloGame::~OthelloGame()
     {
         // noop
+        restoreConsoleInputMode();
     }
 
     void OthelloGame::initialize()
@@ -512,6 +521,7 @@ namespace IrukakunOthello
         display_.initializeDisplay(initialValueGenerator);
         display_.getCurrentCursorPosition(startX_, startY_);
         boardInitialize();
+        initializeConsoleInputMode();
     }
 
     void OthelloGame::run()
@@ -552,14 +562,21 @@ namespace IrukakunOthello
 
             if (playerTurn_)
             {
-                //InputType input = OTHER;
                 InputType input = waitForInput();
                 if (input == LEFT_CLICK)
                 {
-                    std::cout << "left button press" << std::endl;
+                    // マウスクリック入力時
+                    std::pair<int, int> position = display_.convertToElementIndex(getLastClickPositionX(), getLastClickPositionY());
+                    short tempRow = position.first;
+                    short tempCol = position.second;
+                    convertForBoard(tempRow, tempCol);
+                    row = std::to_string(tempRow)[0];
+                    col = std::to_string(tempCol)[0];
+                    std::cout << row << "," << col << std::endl;
                 }
                 else
                 {
+                    // コンソール入力時
                     std::cin >> row;
                     if (!std::cin)
                     {
@@ -573,30 +590,30 @@ namespace IrukakunOthello
                     {
                         break;
                     }
+                }
 
-                    if (std::isdigit(row) && std::isdigit(col))
+                if (std::isdigit(row) && std::isdigit(col))
+                {
+                    // 行列入力時
+                    short rowNo = std::stoi(std::string{row});
+                    short colNo = std::stoi(std::string{col});
+                    if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
                     {
-                        // 行列入力時
-                        short rowNo = std::stoi(std::string{row});
-                        short colNo = std::stoi(std::string{col});
-                        if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
-                        {
-                            last = putDisk(rowNo, colNo, playerDisk_);
-                        }
+                        last = putDisk(rowNo, colNo, playerDisk_);
                     }
-                    else
+                }
+                else
+                {
+                    // コマンド入力時
+                    char c = row;
+                    if (std::isdigit(c))
                     {
-                        // コマンド入力時
-                        char c = row;
-                        if (std::isdigit(c))
-                        {
-                            c = col;
-                        }
-                        switch (c)
-                        {
-                        case QUIT:
-                            return;
-                        }
+                        c = col;
+                    }
+                    switch (c)
+                    {
+                    case QUIT:
+                        return;
                     }
                 }
             }
