@@ -5,6 +5,13 @@
 
 namespace IrukakunOthello
 {
+    enum InputType
+    {
+        LEFT_CLICK,
+        OTHER
+    };
+
+    InputType waitForInput();
     void getCursorPosition(short &x, short &y);
     void setCursorPosition(const short x, const short y);
 

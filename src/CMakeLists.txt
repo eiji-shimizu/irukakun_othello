@@ -24,6 +24,7 @@ target_link_libraries(OthelloGameMod
                         PRIVATE DisplayMod)
 
 target_include_directories(OthelloGameMod
+                            PRIVATE ${IRUKAKUN_OTHELLO_INCLUDE_PLATFORM_DIRS}
                             PUBLIC ${IRUKAKUN_OTHELLO_INCLUDE_DIRS})
 
 # IrukakunOthello

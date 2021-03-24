@@ -6,8 +6,6 @@
 #include <string>
 #include <exception>
 
-#include <windows.h>
-
 using namespace IrukakunOthello;
 
 int main()

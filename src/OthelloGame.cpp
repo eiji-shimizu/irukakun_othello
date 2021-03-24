@@ -1,5 +1,6 @@
 #include "OthelloGame.h"
 #include "Display.h"
+#include "Console.h"
 
 #include <assert.h>
 #include <iostream>
@@ -551,46 +552,55 @@ namespace IrukakunOthello
 
             if (playerTurn_)
             {
-                std::cin >> row;
-                if (!std::cin)
+                //InputType input = OTHER;
+                InputType input = waitForInput();
+                if (input == LEFT_CLICK)
                 {
-                    break;
-                }
-                if (std::isdigit(row))
-                {
-                    std::cin >> col;
-                }
-                if (!std::cin)
-                {
-                    break;
-                }
-
-                if (std::isdigit(row) && std::isdigit(col))
-                {
-                    // 行列入力時
-                    short rowNo = std::stoi(std::string{row});
-                    short colNo = std::stoi(std::string{col});
-                    if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
-                    {
-                        last = putDisk(rowNo, colNo, playerDisk_);
-                    }
+                    std::cout << "left button press" << std::endl;
                 }
                 else
                 {
-                    // コマンド入力時
-                    char c = row;
-                    if (std::isdigit(c))
+                    std::cin >> row;
+                    if (!std::cin)
                     {
-                        c = col;
+                        break;
                     }
-                    switch (c)
+                    if (std::isdigit(row))
                     {
-                    case QUIT:
-                        return;
+                        std::cin >> col;
+                    }
+                    if (!std::cin)
+                    {
+                        break;
+                    }
+
+                    if (std::isdigit(row) && std::isdigit(col))
+                    {
+                        // 行列入力時
+                        short rowNo = std::stoi(std::string{row});
+                        short colNo = std::stoi(std::string{col});
+                        if (0 < rowNo && rowNo < 9 && 0 < colNo && colNo < 9)
+                        {
+                            last = putDisk(rowNo, colNo, playerDisk_);
+                        }
+                    }
+                    else
+                    {
+                        // コマンド入力時
+                        char c = row;
+                        if (std::isdigit(c))
+                        {
+                            c = col;
+                        }
+                        switch (c)
+                        {
+                        case QUIT:
+                            return;
+                        }
                     }
                 }
             }
-            else
+            else // コンピューターのターン
             {
                 std::vector<Square> list = getValidSquareList(opponentDisk_);
                 if (list.size() > 0)
